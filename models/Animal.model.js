@@ -27,3 +27,6 @@ const animalSchema = new mongoose.Schema({
     timestamps: true,
     owner: { type: Schema.Types.ObjectId, ref: 'User' }
 });
+
+const Animal = model("Animal", userSchema);
+module.exports = Animal;

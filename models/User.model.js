@@ -24,7 +24,7 @@ const userSchema = new Schema({
   },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   animals: [{ type: Schema.Types.ObjectId, ref: 'Animal'}],
-  timestamps: true
+  // timestamps: true
 });
 
 const User = model("User", userSchema);
