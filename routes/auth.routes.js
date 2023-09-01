@@ -76,13 +76,13 @@ router.post("/login", async (req, res, next) => {
         email: foundUser.email,
     }
 
-    const authToken = jwt.sign()
+    // const authToken = jwt.sign()
+    res.json("probando acceso a la ruta");
 
   } catch (error) {
     next(error);
   }
 
-  res.json("probando acceso a la ruta");
 });
 
 // GET "/api/auth/verify" => indicar al FE que el usuario esta activo.
