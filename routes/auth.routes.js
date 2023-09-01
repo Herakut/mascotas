@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.model");
-
 const jwt = require("jsonwebtoken");
+const isAuthenticated = require("../middlewares/isAuthenticated")
 
 // Ruta post "/api/auth/signup" => registrar al usuari
 router.post("/signup", async (req, res, next) => {
@@ -74,20 +74,63 @@ router.post("/login", async (req, res, next) => {
     const payload = {
         _id: foundUser._id,
         email: foundUser.email,
+        username: foundUser.username,
+        profileImg: foundUser.profileImg
+        //de tener roles, se trabajan aca
     }
 
-    // const authToken = jwt.sign()
-    res.json("probando acceso a la ruta");
+    const authToken = jwt.sign(
+      payload,
+      process.env.TOKEN_SECRET,
+      { algorithm: "HS256", expiresIn: "5d"}
+    )
+   
+
+    res.json({authToken});
 
   } catch (error) {
     next(error);
   }
 
+  
 });
 
 // GET "/api/auth/verify" => indicar al FE que el usuario esta activo.
 
 module.exports = router;
+router.get("/verify", isAuthenticated,(req,res,next)=>{
+
+  //!de ahora en adlante, cada vez que usemos el middleware isAuthen....
+  //!...vamos a tener acceso a algo llamado req.payload
+
+  console.log(req.payload)
+
+  res.json(req.payload)
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // --------------------------------------------------------------------------- Antiguo
 
