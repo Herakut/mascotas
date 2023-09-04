@@ -3,6 +3,8 @@ const router = require("express").Router();
 const Animal = require("../models/Animal.model");
 const User = require("../models/User.model");
 
+const uploader=require("../middlewares/cloudinary.js")
+
 
 router.get('/user/:userId', async (req, res, next) => {
 
@@ -22,5 +24,30 @@ router.get('/:userId/animals', async (req, res, next) => {
 
     res.json(animals);
 })
+
+
+//
+
+router.post("/upload-profile-pic",uploader.single("profilePic"), (req,res,next)=>{
+
+    console.log(req.body)
+    User.findByIdAndUpdate(req.session.user._id,{
+        profilePic: req.file.path 
+    })
+    .then(()=>{
+        res.redirect("/user")
+    })
+    .catch(()=>{
+        next(error)
+    })
+
+    
+
+})
+
+
+
+
+
 
 module.exports = router
