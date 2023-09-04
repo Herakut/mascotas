@@ -3,9 +3,9 @@
     <h3>Bienvenido {{user.name}}</h3>
 
     <h3>Cambiar la imagen de perdil</h3>
-    <form action="/user/upload-profile-pic" method="post">
+    <form action="/user/upload-profile-pic" method="post" enctype="multipart/form-data">
         <label for="profilePic">Imagen de perfil</label>
-        <input type="text" name="ProfilePic">
+        <input type="text" name="profilePic">
 
         <button>Agregar</button>
     </form>
