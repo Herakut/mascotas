@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const animalSchema = new mongoose.Schema(
+const animalSchema = new Schema(
   {
     name: { 
       type: String,
@@ -11,7 +11,7 @@ const animalSchema = new mongoose.Schema(
       required: true,
     },
     years: {
-      type: number,
+      type: Number,
       required: true
     },
     description: {

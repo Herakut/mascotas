@@ -4,21 +4,27 @@ const User = require("../models/User.model");
 const jwt = require("jsonwebtoken");
 const isAuthenticated = require("../middlewares/isAuthenticated")
 
-// Ruta post "/api/auth/signup" => registrar al usuari
-router.post("/signup", async (req, res, next) => {
+// Ruta post "/api/auth/user-signup" => registrar al usuario
+router.post("/user-signup", async (req, res, next) => {
   const { username, email, password } = req.body;
-  console.log(req.body);
-
-  // 1. validaciones
-  // que tenga el nombre un formato especifico
-  // con la contraseña y el email igual
-  // que el usuario no este repetido
 
   // campos llenos
   if (!username || !email || !password) {
     res
       .status(400)
       .json({ errorMessage: "Todos los campos deben estar llenos" });
+    return;
+  }
+
+  // Validación para comprobar que la contraseña cumple unos requisitos
+  const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\/\\])(?=.{8,})/gm;
+  if (regexPassword.test(password) === false) {
+    res
+      .status(400)
+      .json({ 
+        errorMessage:
+        "La contraseña debe tener al menos una mayúscula, una minúscula, un caracter especial y tener 8 caracteres o más",
+      });
     return;
   }
 
@@ -35,7 +41,6 @@ router.post("/signup", async (req, res, next) => {
       password: hashPassword,
     });
 
-    res.json("usuario creado");
   } catch (error) {
     next(error);
   }
@@ -72,11 +77,10 @@ router.post("/login", async (req, res, next) => {
     // crear la sesion
     // en el payload agregamos info que no deberia cambiar
     const payload = {
-        _id: foundUser._id,
-        email: foundUser.email,
-        username: foundUser.username,
-        profileImg: foundUser.profileImg
-        //de tener roles, se trabajan aca
+      _id: foundUser._id,
+      email: foundUser.email,
+      username: foundUser.username,
+      profileImg: foundUser.profileImg,
     }
 
     const authToken = jwt.sign(
@@ -84,7 +88,6 @@ router.post("/login", async (req, res, next) => {
       process.env.TOKEN_SECRET,
       { algorithm: "HS256", expiresIn: "5d"}
     )
-   
 
     res.json({authToken});
 
@@ -97,7 +100,6 @@ router.post("/login", async (req, res, next) => {
 
 // GET "/api/auth/verify" => indicar al FE que el usuario esta activo.
 
-module.exports = router;
 router.get("/verify", isAuthenticated,(req,res,next)=>{
 
   //!de ahora en adlante, cada vez que usemos el middleware isAuthen....
@@ -112,6 +114,7 @@ router.get("/verify", isAuthenticated,(req,res,next)=>{
 
 
 
+module.exports = router;
 
 
 
@@ -258,4 +261,3 @@ router.get("/verify", isAuthenticated,(req,res,next)=>{
 //   });
 // });
 
-module.exports = router;
