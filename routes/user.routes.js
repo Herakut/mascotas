@@ -34,6 +34,7 @@ router.get("/users", async (req, res, next) => {
 router.patch("/follow/:userId", async (req, res) => {
   const { userId } = req.params;
   const { loggedInUserId } = req.body;
+  console.log(loggedInUserId,"holaaa")
 
   try {
     const userToFollow = await User.findByIdAndUpdate(
