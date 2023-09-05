@@ -40,6 +40,7 @@ router.post("/user-signup", async (req, res, next) => {
       email,
       password: hashPassword,
     });
+    res.json("usuario creado")
 
   } catch (error) {
     next(error);
@@ -56,7 +57,7 @@ router.post("/login", async (req, res, next) => {
   try {
     // Existencia del usuario
     const foundUser = await User.findOne({ email });
-    console.log(foundUser);
+    // console.log(foundUser);
     if (foundUser === null) {
       res
         .status(400)
@@ -66,7 +67,7 @@ router.post("/login", async (req, res, next) => {
 
     // contraseña correcta
     const isPasswordValid = await bcrypt.compare(password, foundUser.password)
-    console.log(isPasswordValid)
+    // console.log(isPasswordValid)
     if (isPasswordValid === false) {
         res
           .status(400)
@@ -102,8 +103,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/verify", isAuthenticated,(req,res,next)=>{
 
-  //!de ahora en adlante, cada vez que usemos el middleware isAuthen....
-  //!...vamos a tener acceso a algo llamado req.payload
+
 
   console.log(req.payload)
 
