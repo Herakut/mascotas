@@ -2,6 +2,8 @@ const router = require("express").Router();
 const Animal = require("../models/Animal.model");
 const User = require("../models/User.model");
 
+const uploader=require("../middlewares/cloudinary.js")
+
 
 
 // Perfil
