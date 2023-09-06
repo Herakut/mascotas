@@ -26,13 +26,14 @@ router.get("/users", isAuthenticated, async (req, res, next) => {
 });
 
 // Ruta para seguir a un usuario
-router.patch("/follow/:userId", isAuthenticated, async (req, res) => {
+router.patch("/follow/:userId", isAuthenticated, async (req, res) => { 
   const { userId } = req.params;
-  const userInSession = req.payload; // obtener usuario en sesión
+  console.log(userId, "fdasfdfffffffffffffffffffffffffffdasf")
+  const userInSession = req.payload; // obtener usuario en sesión/payload/el id es necesario del agregado
 
   try {
     const userFollowed = await User.findById(userId)
-    const userFollowing = await User.findById(userInSession)
+    const userFollowing = await User.findById(userInSession) // redundancia, debemos elimanr
 
     // hay que hacerlo en 2 pasos, el usuario seguido tiene que guardar el que lo sigue y el que sigue tiene que guardar al seguido
     const followedResult = await User.findByIdAndUpdate(userFollowed, {
