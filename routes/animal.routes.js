@@ -35,7 +35,7 @@ router.post("/animal-signup/:userId", async (req, res, next) => {
   }
 });
 
-// Ruta get para listar tus animales:
+// Ruta get para obtener los datos de un animal concreto
 router.get("/:animalId/details", async (req, res, next) => {
   const { animalId } = req.params
 

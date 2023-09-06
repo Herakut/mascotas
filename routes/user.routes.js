@@ -12,6 +12,18 @@ router.get("/:userId/animals", async (req, res, next) => {
   res.json(usersInfo);
 });
 
+router.get("/:userId/details", async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId).populate("animals");
+    console.log(user);
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Lista de usuarios
 router.get("/users", isAuthenticated, async (req, res, next) => {
   const userInSession = req.payload; // obtener usuario en sesión
@@ -26,30 +38,38 @@ router.get("/users", isAuthenticated, async (req, res, next) => {
 });
 
 // Ruta para seguir a un usuario
-router.patch("/follow/:userId", isAuthenticated, async (req, res) => { 
+router.patch("/follow/:userId", isAuthenticated, async (req, res) => {
   const { userId } = req.params;
-  console.log(userId, "fdasfdfffffffffffffffffffffffffffdasf")
+  console.log(userId, "fdasfdfffffffffffffffffffffffffffdasf");
   const userInSession = req.payload; // obtener usuario en sesión/payload/el id es necesario del agregado
 
   try {
-    const userFollowed = await User.findById(userId)
-    const userFollowing = await User.findById(userInSession) // redundancia, debemos elimanr
+    const userFollowed = await User.findById(userId);
+    const userFollowing = await User.findById(userInSession);
 
     // hay que hacerlo en 2 pasos, el usuario seguido tiene que guardar el que lo sigue y el que sigue tiene que guardar al seguido
-    const followedResult = await User.findByIdAndUpdate(userFollowed, {
-        $push: { friends: userFollowing }
-    }, {
-        $new: true
-    })
+    const followedResult = await User.findByIdAndUpdate(
+      userFollowed,
+      {
+        $push: { friends: userFollowing },
+      },
+      {
+        $new: true,
+      }
+    );
 
-    const followingResult = await User.findByIdAndUpdate(userFollowing, {
+    const followingResult = await User.findByIdAndUpdate(
+      userFollowing,
+      {
         $push: { friends: userFollowed },
       },
-      { new: true }
-    )
+      {
+        new: true,
+      }
+    );
 
-    console.log(followedResult)
-    console.log(followingResult)
+    console.log(followedResult);
+    console.log(followingResult);
 
     res.status(200).json("Los usuarios se siguen");
   } catch (error) {
@@ -59,30 +79,35 @@ router.patch("/follow/:userId", isAuthenticated, async (req, res) => {
 });
 
 // Ruta para dejar de seguir a un usuario
-// router.patch("/unfollow/:userId", async (req, res) => {
-//   const { userId } = req.params;
-//   const { loggedInUserId } = req.body;
+router.patch("/unfollow/:userId", isAuthenticated, async (req, res) => {
+  const { userId } = req.params;
+  console.log(userId, "fdasfdfffffffffffffffffffffffffffdasf");
+  const userInSession = req.payload; // obtener usuario en sesión/payload/el id es necesario del agregado
 
-//   try {
-//     const userToUnfollow = await User.findByIdAndUpdate(
-//       userId,
-//       {
-//         $pull: { friends: loggedInUserId },
-//       },
-//       { new: true }
-//     );
+  try {
+    const userUnfollowed = await User.findById(userId);
+    const userUnfollowing = await User.findById(userInSession);
 
-//     if (!userToUnfollow) {
-//       return res
-//         .status(404)
-//         .json({ message: "Usuario a dejar de seguir no encontrado" });
-//     }
+    // hay que hacerlo en 2 pasos, el usuario seguido tiene que guardar el que lo sigue y el que sigue tiene que guardar al seguido
+    const unfollowedResult = await User.findByIdAndUpdate(userUnfollowed._id, {
+      $pull: { friends: userUnfollowing._id },
+    });
 
-//     res.status(200).json({ message: "Has dejado de seguir a este usuario" });
-//   } catch (error) {
-//     console.error("Error al dejar de seguir al usuario:", error);
-//     res.status(500).json({ message: "Error al dejar de seguir al usuario" });
-//   }
-// });
+    const unfollowingResult = await User.findByIdAndUpdate(
+      userUnfollowing._id,
+      {
+        $pull: { friends: userUnfollowed._id },
+      }
+    );
+
+    console.log(unfollowedResult);
+    console.log(unfollowingResult);
+
+    res.status(200).json("Los usuarios se dejaron de seguir");
+  } catch (error) {
+    console.error("Error al seguir al usuario:", error);
+    res.status(500).json({ message: "Error al seguir al usuario" });
+  }
+});
 
 module.exports = router;
