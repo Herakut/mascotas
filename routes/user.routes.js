@@ -21,7 +21,7 @@ User.findByIdAndUpdate(req.session.user._id,{
   profilePic: req.file.path
 })
 .then(()=>{
-res.redirect("/Perfil.jsx")
+res.redirect("/:userId/animals")
 })
 .catch((error)=>{
   next(error)
