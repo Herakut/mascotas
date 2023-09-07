@@ -3,11 +3,23 @@ const Animal = require("../models/Animal.model");
 const User = require("../models/User.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
+
+
+
+
+
+
+
+
+
+
+
+
 const uploader=require("../middlewares/cloudinary.js");
 const { reset } = require("nodemon");
 
 //Ruta para recibir imagen y subirla a Cloudinary
-router.post("/upload-profile-pic", uploader.single("profilePic"), (req,res,next)=>{
+router.post("//:userId/animals", uploader.single("profilePic"), (req,res,next)=>{
 //cuando recibimos la imagen
 //la iamgen la pasamos a cloudinary
 
@@ -27,6 +39,23 @@ res.redirect("/:userId/animals")
   next(error)
 })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
