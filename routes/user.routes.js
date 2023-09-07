@@ -3,7 +3,35 @@ const Animal = require("../models/Animal.model");
 const User = require("../models/User.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
-// const uploader=require("../middlewares/cloudinary.js")
+const uploader=require("../middlewares/cloudinary.js");
+const { reset } = require("nodemon");
+
+//Ruta para recibir imagen y subirla a Cloudinary
+router.post("/upload-profile-pic", uploader.single("profilePic"), (req,res,next)=>{
+//cuando recibimos la imagen
+//la iamgen la pasamos a cloudinary
+
+//cloudinary nos devuelve el url de acesso
+
+
+
+console.log(req.file, "cloudinaryyyyyyyyyyyyyyyyyyyyyyyyy")
+//buscar el usuario que esta subieno esa imagen, actualizarlo y cambiar su profilePic por el req.file.path de cloudinary
+User.findByIdAndUpdate(req.session.user._id,{
+  profilePic: req.file.path
+})
+.then(()=>{
+res.redirect("/Perfil.jsx")
+})
+.catch((error)=>{
+  next(error)
+})
+})
+
+
+
+
+
 
 // Perfil
 router.get("/:userId/animals", async (req, res, next) => {
