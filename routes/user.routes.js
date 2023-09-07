@@ -19,7 +19,7 @@ const uploader=require("../middlewares/cloudinary.js");
 const { reset } = require("nodemon");
 
 //Ruta para recibir imagen y subirla a Cloudinary
-router.post("/:userId/animals", uploader.single("profilePic"), (req,res,next)=>{
+router.post("/picture-update", isAuthenticated, (req,res,next)=>{
 //cuando recibimos la imagen
 //la iamgen la pasamos a cloudinary
 
@@ -27,13 +27,16 @@ router.post("/:userId/animals", uploader.single("profilePic"), (req,res,next)=>{
 
 
 
-console.log(req.file, "cloudinaryyyyyyyyyyyyyyyyyyyyyyyyy")
+console.log(req.payload, "cloudinaryyyyyyyyyyyyyyyyyyyyyyyyy")
 //buscar el usuario que esta subieno esa imagen, actualizarlo y cambiar su profilePic por el req.file.path de cloudinary
-User.findByIdAndUpdate(req.session.user._id,{
-  profilePic: req.file.path
+User.findByIdAndUpdate(req.payload._id,{
+  profileImg: req.body.imageUrl
+},{
+  new:true
 })
-.then(()=>{
-res.redirect("/:userId/animals")
+.then((response)=>{
+  console.log(response)
+res.json(response)
 })
 .catch((error)=>{
   next(error)

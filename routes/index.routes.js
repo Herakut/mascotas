@@ -1,5 +1,23 @@
 const router = require("express").Router();
 
+
+const uploadRoutes = require("./upload.routes");
+router.use("/upload", uploadRoutes);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
